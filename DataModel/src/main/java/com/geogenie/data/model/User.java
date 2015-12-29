@@ -2,12 +2,18 @@ package com.geogenie.data.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -35,11 +41,26 @@ public class User implements Serializable {
 	@XmlElement
 	@Column(nullable = false)
 	@NotNull(message="error.name.mandatory")
-	private String name;
+	private String firstName;
+	@XmlElement
+	@Column(nullable = true)
+	private String middleName;
+	@XmlElement
+	@Column(nullable = false)
+	@NotNull(message="error.name.mandatory")
+	private String lastName;
 	@XmlElement
 	@Column(nullable = false)
 	@NotNull(message="error.email.mandatory")
 	private String emailId;
+	@Column(nullable = false)
+	@NotNull(message="error.password.mandatory")
+	private String password;
+	
+	@Column(nullable=false)
+	@XmlTransient
+	private String isEnabled;
+	
 	@XmlTransient
 	@Column(nullable = false)
 	private Date createDt;
@@ -48,6 +69,57 @@ public class User implements Serializable {
 	@Column(nullable=false)
 	private Integer dailyQuota;
 	
+	@OneToMany(cascade=CascadeType.ALL)
+	@JoinTable(name = "userDevice", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = { @JoinColumn(name = "device_id") })
+	Set<SmartDevice> smartDevices = new HashSet<>();
+	
+	public Set<SmartDevice> getSmartDevices() {
+		return smartDevices;
+	}
+
+	public void setSmartDevices(Set<SmartDevice> smartDevices) {
+		this.smartDevices = smartDevices;
+	}
+
+	public String getIsEnabled() {
+		return isEnabled;
+	}
+
+	public void setIsEnabled(String isEnabled) {
+		this.isEnabled = isEnabled;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getMiddleName() {
+		return middleName;
+	}
+
+	public void setMiddleName(String middleName) {
+		this.middleName = middleName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 
 	public Integer getDailyQuota() {
 		return dailyQuota;
@@ -65,14 +137,7 @@ public class User implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	
 	public String getEmailId() {
 		return emailId;
 	}
@@ -93,7 +158,7 @@ public class User implements Serializable {
 
 	@Override
 	public String toString() {
-		return "[ name = " + name + " , emailId = " + emailId;
+		return "[ name = " + firstName + " , lastname = " + lastName + " ] ";
 	}
 
 }

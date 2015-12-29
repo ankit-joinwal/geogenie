@@ -3,13 +3,10 @@ package com.geogenie.data.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -38,9 +35,7 @@ public class SmartDevice implements Serializable{
 	@XmlElement
 	@NotNull(message="error.uniqueid.mandatory")
 	private String uniqueId;
-	@Column(nullable=false)
-	@XmlElement
-	private String privateKey;
+	
 	@Column(nullable=false)
 	@XmlElement
 	@NotNull(message="error.build.version.mandatory")
@@ -60,11 +55,7 @@ public class SmartDevice implements Serializable{
 	@Column(nullable=false)
 	private Date createDt;
 	
-	@ManyToOne(cascade=CascadeType.ALL)
-	@JoinColumn(name="user_id",nullable=false)
-	@XmlElement
-	@NotNull
-	private User user;
+	
 
 	public Long getId() {
 		return id;
@@ -82,13 +73,7 @@ public class SmartDevice implements Serializable{
 		this.uniqueId = uniqueId;
 	}
 
-	public String getPrivateKey() {
-		return privateKey;
-	}
 
-	public void setPrivateKey(String privateKey) {
-		this.privateKey = privateKey;
-	}
 
 	public DeviceType getDeviceType() {
 		return deviceType;
@@ -122,14 +107,6 @@ public class SmartDevice implements Serializable{
 		this.isEnabled = isEnabled;
 	}
 
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-	
 	public Date getCreateDt() {
 		return createDt;
 	}
@@ -141,12 +118,10 @@ public class SmartDevice implements Serializable{
 	@Override
 	public String toString() {
 		return "SmartDevice : [ uniqueId = "  + uniqueId+ " , " +
-				"privateKey = " + privateKey + " , " +
 				"buildVersion = " + buildVersion+ " , " +
 				"osVersion = "  + osVersion + " , " +
 				"deviceType = " + deviceType.toString() + " , " +
 				"isEnabled = " + isEnabled +" , " +
-				"user = " + user.toString() +
 				"]";
 	}
 	

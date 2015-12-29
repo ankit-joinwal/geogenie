@@ -29,7 +29,7 @@ public class ServiceInitializer implements WebApplicationInitializer{
         AnnotationConfigWebApplicationContext context = new AnnotationConfigWebApplicationContext();
         context.register(SpringConfiguration.class);
         context.register(HibernateConfiguration.class);
-
+        context.register(AppSecurityConfig.class);
         servletContext.addListener(new ContextLoaderListener(context));
 
         return context;
@@ -42,6 +42,13 @@ public class ServiceInitializer implements WebApplicationInitializer{
         servlet.setLoadOnStartup(1);
         servlet.addMapping("/*");
     }
+    
+   /* private void addFilters(ServletContext servletContext, WebApplicationContext rootContext){
+    	
+    	//servletContext.addFilter(filterName, filter)
+    }*/
+    
+    
 
 	/*@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {  

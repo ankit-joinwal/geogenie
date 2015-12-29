@@ -1,17 +1,20 @@
 package com.geogenie.user.service.business;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.geogenie.data.model.SmartDevice;
 import com.geogenie.data.model.User;
 import com.geogenie.user.service.dao.UserDAO;
-import com.geogenie.user.service.util.PKeyGenerator;
 
 @Service("userService")
 @Transactional
@@ -30,14 +33,10 @@ public class UserServiceImpl implements IUserService{
 	}
 
 	@Override
-	public SmartDevice registerUser(SmartDevice device) {
+	public User registerUser(User user) {
 		logger.debug("### Inside registerUser of UserServiceImpl ###");
-		logger.info("### Generating Private key for new device ###");
-		String pKey = PKeyGenerator.generateKey();
-		device.setPrivateKey(pKey);
-		logger.debug("### Private key generated : {} ###",pKey);
-		logger.info("### Proceeding to persist new device ###");
-		return this.userDAO.registerUser(device);
+		
+		return this.userDAO.registerUser(user);
 	}
 	
 	@Override
@@ -49,4 +48,24 @@ public class UserServiceImpl implements IUserService{
 	public List<User> getAllUsers() {
 		return this.userDAO.getAllUsers();
 	}
+
+	@Override
+	public UserDetails loadUserByUsername(String username)
+			throws UsernameNotFoundException {
+		User user = userDAO.getUserByEmailId(username);
+        logger.info("### 123 ");
+        if (user == null) {
+            String message = "User not found" + username;
+            logger.info(message);
+            throw new UsernameNotFoundException(message);
+        }
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        logger.info("Found user in database: " + user);
+
+        return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorities);
+	}
+
+	
 }

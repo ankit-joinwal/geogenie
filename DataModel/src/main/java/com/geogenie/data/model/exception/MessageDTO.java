@@ -11,6 +11,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.NONE)
 public class MessageDTO implements Serializable{
 
+	public MessageDTO() {
+		super();
+	}
 	private static final long serialVersionUID = 1L;
 	@XmlElement
 	private String message;

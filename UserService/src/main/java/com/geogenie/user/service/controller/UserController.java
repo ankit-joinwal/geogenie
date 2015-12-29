@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.geogenie.data.model.SmartDevice;
 import com.geogenie.data.model.User;
 import com.geogenie.user.service.business.IUserService;
 
@@ -47,20 +46,19 @@ public class UserController {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, consumes = {
 			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	@ResponseStatus(HttpStatus.CREATED)
-	public SmartDevice registerUser(@Valid @RequestBody SmartDevice smartDevice, HttpServletResponse  response) {
+	public User registerUser(@Valid @RequestBody User user, HttpServletResponse  response) {
 		
-		logger.info("### Request recieved- RegisterUser. Arguments : {} ###"+smartDevice);
-		SmartDevice device = userService.registerUser(smartDevice);
+		logger.info("### Request recieved- RegisterUser. Arguments : {} ###"+user);
+		User createdUser = userService.registerUser(user);
 		
-		logger.info("### Registration successfull for device : {} ",smartDevice.getUniqueId());
+		logger.info("### Registration successfull for user : {} ",user.getEmailId());
 		
-		return device;
+		return createdUser;
 		
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = {
-			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, consumes = {
-					MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+			MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public List<User> getAllUsers() {
 		System.out.println("### Request recieved- Get All Users ###");
 		List<User> users = userService.getAllUsers();
